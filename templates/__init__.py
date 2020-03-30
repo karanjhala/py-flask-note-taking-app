@@ -56,7 +56,7 @@ def create_app(test_config=None):
                 error = 'Username is already taken.'
 
             if error is None:
-                user = User(username=username, password=password)
+                user = User(username=username, password=generate_password_hash(password))
                 db.session.add(user)
                 db.session.commit()
                 flash("Successfully signed up! Please log in.", 'success')
@@ -75,7 +75,7 @@ def create_app(test_config=None):
 
             user = User.query.filter_by(username=username).first()
 
-            if not user or not password:
+            if not user or not check_password_hash(user.password, password):
                 error = 'Username or password are incorrect'
 
             if error is None:
